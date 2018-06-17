@@ -17,7 +17,7 @@ public:
 	static const size_t ByteLimit = 128;
 	static const size_t NumFreeList = ByteLimit / Align;
 	// AllocSize must be larger than Align + ByteLimit
-    static const size_t AllocSize = 256;
+    static const size_t AllocSize = 1024;
 	static size_t RoundUp(size_t n);
 
 // private:
