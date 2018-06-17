@@ -13,7 +13,7 @@ size_t MemPool::RoundUp(size_t n)
 }
 size_t MemPool::FindIndex(size_t n)
 {
-    return RoundUp(n) / Align;
+    return RoundUp(n) / Align - 1;
 }
 void * MemPool::GetBlock(size_t n)
 {
@@ -57,18 +57,21 @@ void * MemPool::GetBlock(size_t n)
 
 void * MemPool::alloc(size_t n)
 {
-	Node * result;
+	Node * result = nullptr;
 	//if (n > ByteLimit)
 		//return Allocator::allocate(n);
-	
-    auto & free_list_use = free_list[FindIndex(n)];
-	if (free_list_use == nullptr) {
-		return GetBlock(n);
-	}
-	else {
-		result = free_list_use;
-		free_list[FindIndex(n)] = result->next;
-	}
+	if (n)
+    {
+        auto & free_list_use = free_list[FindIndex(n)];
+        if (free_list_use == nullptr) {
+            return GetBlock(n);
+        }
+        else {
+            result = free_list_use;
+            free_list[FindIndex(n)] = result->next;
+        }
+    }
+   
 //    Report();
 	return result;
 }
@@ -81,9 +84,13 @@ void MemPool::dealloc(void * p, size_t n)
 		Allocator::deallocate(p, n);
 		return nullptr;
 	}*/
-    auto & free_list_reuse = free_list[FindIndex(n)];
-	reinterpret_cast<Node *>(p)->next = free_list_reuse;
-	free_list_reuse = reinterpret_cast<Node *>(p);
+    if (n)
+    {
+        auto & free_list_reuse = free_list[FindIndex(n)];
+        reinterpret_cast<Node *>(p)->next = free_list_reuse;
+        free_list_reuse = reinterpret_cast<Node *>(p);
+    }
+   
 //    Report();
 }
 
