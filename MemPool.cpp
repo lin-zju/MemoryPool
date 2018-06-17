@@ -10,7 +10,7 @@ size_t MemPool::FindIndex(size_t n)
 {
     return RoundUp(n) / Align;
 }
-MemPool::Node * MemPool::GetBlock(size_t n)
+void * MemPool::GetBlock(size_t n)
 {
     size_t block_size = RoundUp(n);
     size_t pool_space = pool_end - pool_start;
@@ -22,7 +22,7 @@ MemPool::Node * MemPool::GetBlock(size_t n)
         
         char * temp = pool_start;
         pool_start += block_size;
-        return reinterpret_cast<Node *>(temp);
+        return reinterpret_cast<void *>(temp);
     }
     else
     {

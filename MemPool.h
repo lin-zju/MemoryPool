@@ -30,7 +30,7 @@ public:
 	static char * pool_end;
 	// get an n-Node blocks from the memory pool
 	// if no blocks is available, throw AllocFail
-	Node * GetBlock(size_t n);
+	void * GetBlock(size_t n);
 };
 
 MemPool::Node * MemPool::free_list[NumFreeList] = {nullptr};
