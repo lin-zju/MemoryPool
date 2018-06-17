@@ -1,4 +1,11 @@
-#include <exception>
+#ifndef ALLOCATOR_H_
+#define ALLOCATOR_H_
+
+#include "MemPool.h"
+#include <iostream>
+#include <new>
+
+static MemPool pool;
 
 template <typename T>
 class Allocator
@@ -17,53 +24,52 @@ public:
     typedef std::true_type 			is_always_equal;
 
 	// methods
-	pointer address(reference x) const noexcept;
-	const_pointer address(const_reference x) const noexcept;
+	pointer address(reference x) const noexcept { return &x; }
+	const_pointer address(const_reference x) const noexcept { return &x; }
 	void deallocate(pointer p, size_type n);
 	pointer allocate(size_type n);
 	template <class U, class... Args>
 	void construct(U * p, Args &&... args );
 	template <class U>
 	void destroy(U * p);
-
-	class AllocFail : public std::exception
-	{
-	public:
-		const char * what() const noexcept
-			{ return "no memory available!\n";} 
-    };
-//private:
-	static const size_t Align = 8;
-	static const size_t ByteLimit = 64;
-	// round up Node size
-	static const size_t NodeSize = sizeof(T) + (Align - sizeof(T) % Align);
-	static const size_t NumFreeList = ByteLimit / NodeSize;
-	const static size_t AllocSize = Align + 64;
-
-	// freelist level
-	union Node
-	{
-		Node * next;
-		value_type val;
-	};
-	static Node * free_list[NumFreeList];
-	// return the proper index of the list 
-	// for a n-Node block
-	static size_t FindIndex(size_t n);
-
-	// memory pool level
-	static char * pool_start;
-	static char * pool_end;
-	// get an n-Node blocks from the memory pool
-	// if no blocks is available, throw AllocFail
-	Node * GetBlock(int n);
 };
 
 
 template <typename T>
-char * Allocator<T>::pool_start = nullptr;
+void Allocator<T>::deallocate(pointer p, size_type n)
+{
+	if (n * sizeof(T) <= MemPool::ByteLimit)
+		pool.dealloc(p, n * sizeof(T));
+	else
+		::operator delete(p);
+}
+
 template <typename T>
-char * Allocator<T>::pool_end = nullptr;
+typename Allocator<T>::pointer Allocator<T>::allocate(size_type n)
+{
+	if (n * sizeof(T) <= MemPool::ByteLimit)
+        return reinterpret_cast<pointer>(pool.alloc(n * sizeof(T)));
+	else
+    {
+        
+        auto temp = reinterpret_cast<pointer>(::operator new(n * sizeof(T)));
+        std::cout << "Chunk allocation: " << reinterpret_cast<void *>(temp) << std::endl;
+        return temp;
+    }
+}
+
 template <typename T>
-typename Allocator<T>::Node * free_list[Allocator<T>::NumFreeList] = {nullptr};
-#include "Allocator.hpp"
+template <class U, class... Args>
+void Allocator<T>::construct(U * p, Args &&... args )
+{
+	new (p) T(args...);
+}
+
+template <typename T>
+template <class U>
+void Allocator<T>::destroy(U * p)
+{
+	p->~T();
+}
+
+#endif

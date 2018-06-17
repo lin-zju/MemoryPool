@@ -1,3 +1,6 @@
+#ifndef MEM_POOL
+#define MEM_POOL
+
 #include <new>
 class MemPool
 {
@@ -17,7 +20,7 @@ public:
 	static const size_t ByteLimit = 64;
 	static const size_t NumFreeList = ByteLimit / Align;
 	// AllocSize must be larger than Align + ByteLimit
-    static const size_t AllocSize = 64 + Align;
+    static const size_t AllocSize = ByteLimit + Align;
 	static size_t RoundUp(size_t n);
 
 // private:
@@ -29,6 +32,7 @@ public:
 	static size_t FindIndex(size_t n);
 // private:
 	// memory pool level
+    static int user_count;
 	static char * pool_start;
 	static char * pool_end;
 	static Node * current_block;
@@ -37,5 +41,5 @@ public:
 	void * GetBlock(size_t n);
     void Report();
 };
-
+#endif
 
