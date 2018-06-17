@@ -10,11 +10,14 @@ public:
     {
         Node * next;
         char byte;
+        // no visible to free_list
+        Node * prev;
     };
 	static const size_t Align = sizeof(Node *);
 	static const size_t ByteLimit = 128;
 	static const size_t NumFreeList = ByteLimit / Align;
-    static const size_t AllocSize = 4096;
+	// AllocSize must be larger than Align + ByteLimit
+    static const size_t AllocSize = 256;
 	static size_t RoundUp(size_t n);
 
 // private:
@@ -28,9 +31,11 @@ public:
 	// memory pool level
 	static char * pool_start;
 	static char * pool_end;
+	static Node * current_block;
 	// get an n-Node blocks from the memory pool
 	// if no blocks is available, throw AllocFail
 	void * GetBlock(size_t n);
+    void Report();
 };
 
 
