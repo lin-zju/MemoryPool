@@ -1,5 +1,8 @@
 #include <iostream>
 #include "MemPool.h"
+MemPool::Node * MemPool::free_list[NumFreeList] = {nullptr};
+char * MemPool::pool_start = nullptr;
+char * MemPool::pool_end = nullptr;
 size_t MemPool::RoundUp(size_t n)
 {
 	if (n % Align)

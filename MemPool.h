@@ -33,6 +33,4 @@ public:
 	void * GetBlock(size_t n);
 };
 
-MemPool::Node * MemPool::free_list[NumFreeList] = {nullptr};
-char * MemPool::pool_start = nullptr;
-char * MemPool::pool_end = nullptr;
+
