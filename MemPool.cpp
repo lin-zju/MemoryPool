@@ -43,6 +43,38 @@ void * MemPool::GetBlock(size_t n)
     }
 }
 
+void * MemPool::alloc(size_t n)
+{
+	Node * result;
+	Node * free_list_use;
+	//if (n > ByteLimit)
+		//return Allocator::allocate(n);
+	
+	free_list_use = free_list + FindIndex(n);
+	if (free_list_use == nullptr) {
+		return GetBlock(n);
+	}
+	else {
+		result = *free_list_use;
+		free_list[FindIndex(n)] = result->next;
+	}
+	return result;
+}
+
+void MemPool::dealloc(void * p, size_t n)
+{
+	Node * free_list_reuse;
+
+	/*if (n > ByteLimit) {
+		Allocator::deallocate(p, n);
+		return nullptr;
+	}*/
+	free_list_reuse = free_list + FindIndex(n);
+	p->next = free_list_reuse;
+	*free_list_reuse = p;
+	return free_list_reuse;
+}
+
 MemPool::~MemPool()
 {
     ::operator delete(pool_start);
