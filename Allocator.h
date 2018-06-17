@@ -34,11 +34,11 @@ public:
     };
 //private:
 	static const size_t Align = 8;
-	static const size_t ByteLimit = 128;
+	static const size_t ByteLimit = 64;
 	// round up Node size
 	static const size_t NodeSize = sizeof(T) + (Align - sizeof(T) % Align);
 	static const size_t NumFreeList = ByteLimit / NodeSize;
-	const static size_t AllocSize;
+	const static size_t AllocSize = Align + 64;
 
 	// freelist level
 	union Node

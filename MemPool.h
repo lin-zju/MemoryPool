@@ -2,8 +2,8 @@
 class MemPool
 {
 public:
-	static void * alloc(size_t n);
-	static void dealloc(void * p, size_t n);
+	void * alloc(size_t n);
+	void dealloc(void * p, size_t n);
     ~MemPool();
 // private:
     union Node
@@ -14,10 +14,10 @@ public:
         Node * prev;
     };
 	static const size_t Align = sizeof(Node *);
-	static const size_t ByteLimit = 128;
+	static const size_t ByteLimit = 64;
 	static const size_t NumFreeList = ByteLimit / Align;
 	// AllocSize must be larger than Align + ByteLimit
-    static const size_t AllocSize = 1024;
+    static const size_t AllocSize = 64 + Align;
 	static size_t RoundUp(size_t n);
 
 // private:
