@@ -3,7 +3,7 @@ class MemPool
 {
 public:
 	static void * alloc(size_t n);
-	static void * dealloc(char * p, size_t n);
+	static void dealloc(void * p, size_t n);
     ~MemPool();
 // private:
     union Node
