@@ -20,23 +20,34 @@ MemPool::MemPool()
     current_block = reinterpret_cast<Node *>(pool_start);
     
     pool_start += sizeof(Node *);
-    pool_end += AllocSize;
+    pool_end = pool_start + AllocSize;
    
 }
 size_t MemPool::RoundUp(size_t n)
 {
-	if (n % Align)
-        return (n + (Align - n % Align));
-    return n;
+//    if (n % Align)
+//        return (n + (Align - n % Align));
+    int m = Align;
+    while (m < n)
+        m <<= 1;
+    return m;
 }
 size_t MemPool::FindIndex(size_t n)
 {
-    return RoundUp(n) / Align - 1;
+    int count = 0;
+    int m = Align;
+    while (m < n)
+    {
+        m <<= 1;
+        count++;
+    }
+    return count;
 }
 void * MemPool::GetBlock(size_t n)
 {
 //    Report();
     size_t block_size = RoundUp(n);
+//    std::cout << block_size << std::endl;
     size_t pool_space = pool_end - pool_start;
 //    std::cout << "Block Size: " << block_size << std::endl;
     if (pool_space >= block_size)
@@ -62,7 +73,7 @@ void * MemPool::GetBlock(size_t n)
 //            list = reinterpret_cast<Node *>(pool_start);
 //        }
         char * temp = reinterpret_cast<char*>(::operator new(AllocSize));
-//        std::cout << "Allocation suceeded. Memory: " << reinterpret_cast<void *>(temp) << ".\n";
+        std::cout << "Allocation suceeded. Memory: " << reinterpret_cast<void *>(temp) << ".\n";
 
         reinterpret_cast<Node *>(temp)->prev = current_block;
         current_block = reinterpret_cast<Node *>(temp);
@@ -90,7 +101,7 @@ void * MemPool::alloc(size_t n)
             return GetBlock(n);
         }
         else {
-//            std::cout << "Reusing\n";
+//            std::cout << "Reusing Size: " << n << "\n";
             result = free_list_use;
             free_list[FindIndex(n)] = result->next;
         }

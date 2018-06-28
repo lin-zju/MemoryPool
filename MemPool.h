@@ -15,13 +15,15 @@ public:
     {
         Node * next;
         char byte;
-        // no visible to free_list
+        // not visible to free_list
         Node * prev;
     };
 //    static const size_t Align = sizeof(Node *);
+    static const size_t NumFreeList = 16;
     static const size_t Align = (8);
-	static const size_t ByteLimit = (1 << 18);
-	static const size_t NumFreeList = ByteLimit / Align;
+    static const size_t ByteLimit = (Align << (NumFreeList - 1));
+    
+
 	// AllocSize must be larger than Align + ByteLimit
     static size_t AllocSize;
 	static size_t RoundUp(size_t n);
@@ -35,7 +37,6 @@ public:
 	static size_t FindIndex(size_t n);
 // private:
 	// memory pool level
-    static int user_count;
 	static char * pool_start;
 	static char * pool_end;
 	static Node * current_block;
