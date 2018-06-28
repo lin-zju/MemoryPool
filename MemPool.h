@@ -2,9 +2,11 @@
 #define MEM_POOL
 
 #include <new>
+
 class MemPool
 {
 public:
+    MemPool();
 	void * alloc(size_t n);
 	void dealloc(void * p, size_t n);
     ~MemPool();
@@ -16,11 +18,12 @@ public:
         // no visible to free_list
         Node * prev;
     };
-	static const size_t Align = sizeof(Node *);
-	static const size_t ByteLimit = 512;
+//    static const size_t Align = sizeof(Node *);
+    static const size_t Align = (8);
+	static const size_t ByteLimit = (1 << 18);
 	static const size_t NumFreeList = ByteLimit / Align;
 	// AllocSize must be larger than Align + ByteLimit
-    static const size_t AllocSize = ByteLimit + sizeof(Node *);
+    static size_t AllocSize;
 	static size_t RoundUp(size_t n);
 
 // private:

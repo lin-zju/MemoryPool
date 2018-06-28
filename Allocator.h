@@ -5,8 +5,8 @@
 #include <iostream>
 #include <new>
 
+extern int chunk_allocation_count;
 static MemPool pool;
-
 template <typename T>
 class Allocator
 {
@@ -38,6 +38,7 @@ public:
 template <typename T>
 void Allocator<T>::deallocate(pointer p, size_type n)
 {
+//    std::cout << "???\n";
 	if (n * sizeof(T) <= MemPool::ByteLimit)
 		pool.dealloc(p, n * sizeof(T));
 	else
@@ -51,9 +52,10 @@ typename Allocator<T>::pointer Allocator<T>::allocate(size_type n)
         return reinterpret_cast<pointer>(pool.alloc(n * sizeof(T)));
 	else
     {
-        
+        chunk_allocation_count++;
         auto temp = reinterpret_cast<pointer>(::operator new(n * sizeof(T)));
-        std::cout << "Chunk allocation: " << reinterpret_cast<void *>(temp) << std::endl;
+//        std::cout << "Chunk allocation: " << n * sizeof(T) << " bytes.\n" << std::endl;
+//        std::cout << "Count: " << count++ << std::endl;
         return temp;
     }
 }
