@@ -5,7 +5,7 @@ int pool_allocation_count;
 int chunk_allocation_count;
 
 //size_t MemPool::AllocSize =  (MemPool::ByteLimit << 2) + sizeof(Node *);
-size_t MemPool::AllocSize =  (1 << 27) + sizeof(Node *);
+size_t MemPool::AllocSize = ByteLimit + sizeof(Node *);
 
 MemPool::Node * MemPool::free_list[NumFreeList] = {nullptr};
 char * MemPool::pool_start = nullptr;
@@ -70,7 +70,7 @@ void * MemPool::GetBlock(size_t n)
     }
     else
     {
-//        std::cout << "Memory pool allocation: " << n << " bytes\n";
+        
 //        std::cout << "Enter if block 1\n";
 //        pool_allocation_count++;
 //        if (pool_space)
@@ -82,6 +82,7 @@ void * MemPool::GetBlock(size_t n)
 //            list = reinterpret_cast<Node *>(pool_start);
 //        }
         char * temp = reinterpret_cast<char*>(::operator new(AllocSize));
+//        std::cout << "Memory pool allocation: " << n << " bytes\n" << "AllocSize: " << AllocSize << std::endl;
 //        std::cout << "Allocation suceeded. Memory: " << reinterpret_cast<void *>(temp) << ".\n";
 
         reinterpret_cast<Node *>(temp)->prev = current_block;
