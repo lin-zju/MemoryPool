@@ -72,7 +72,7 @@ void * MemPool::GetBlock(size_t n)
     {
 //        std::cout << "Memory pool allocation: " << n << " bytes\n";
 //        std::cout << "Enter if block 1\n";
-        pool_allocation_count++;
+//        pool_allocation_count++;
 //        if (pool_space)
 //        {
 ////            std::cout << "HI\n";
@@ -82,7 +82,7 @@ void * MemPool::GetBlock(size_t n)
 //            list = reinterpret_cast<Node *>(pool_start);
 //        }
         char * temp = reinterpret_cast<char*>(::operator new(AllocSize));
-        std::cout << "Allocation suceeded. Memory: " << reinterpret_cast<void *>(temp) << ".\n";
+//        std::cout << "Allocation suceeded. Memory: " << reinterpret_cast<void *>(temp) << ".\n";
 
         reinterpret_cast<Node *>(temp)->prev = current_block;
         current_block = reinterpret_cast<Node *>(temp);
