@@ -27,10 +27,18 @@ size_t MemPool::RoundUp(size_t n)
 {
 //    if (n % Align)
 //        return (n + (Align - n % Align));
-    int m = Align;
-    while (m < n)
-        m <<= 1;
-    return m;
+//    int m = Align;
+//    while (m < n)
+//        m <<= 1;
+//    return m;
+    n--;
+    n |= (n >> 1);
+    n |= (n >> 2);
+    n |= (n >> 4);
+    n |= (n >> 8);
+    n |= (n >> 16);
+    n++;
+    return n;
 }
 size_t MemPool::FindIndex(size_t n)
 {
@@ -50,9 +58,8 @@ void * MemPool::GetBlock(size_t n)
 //    Report();
     size_t block_size = RoundUp(n);
 //    std::cout << block_size << std::endl;
-    size_t pool_space = pool_end - pool_start;
 //    std::cout << "Block Size: " << block_size << std::endl;
-    if (pool_space >= block_size)
+    if (pool_end - pool_start >= block_size)
     {
 //        std::cout << "Enter if block 0\n";
         
