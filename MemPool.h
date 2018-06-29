@@ -19,20 +19,20 @@ public:
         Node * prev;
     };
 //    static const size_t Align = sizeof(Node *);
-    static const size_t Align = (8);
-	static const size_t ByteLimit = (1 << 18);
+    static const size_t Align = (1 << 3);
+	static const size_t ByteLimit = (1 << 17);
 	static const size_t NumFreeList = ByteLimit / Align;
 	// AllocSize must be larger than Align + ByteLimit
     static size_t AllocSize;
-	static size_t RoundUp(size_t n);
-
+	static size_t RoundUp(size_t n) { return (n % Align) ? (n + (Align - n % Align)) : n; }
+    
 // private:
 	// freelist level
 	
 	static Node * free_list[NumFreeList];
 	// return the proper index of the list 
 	// for a n-Node block
-	static size_t FindIndex(size_t n);
+	static size_t FindIndex(size_t n) { return RoundUp(n) / Align - 1;}
 // private:
 	// memory pool level
     static int user_count;

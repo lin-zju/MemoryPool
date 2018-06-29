@@ -23,16 +23,16 @@ MemPool::MemPool()
     pool_end += AllocSize;
    
 }
-size_t MemPool::RoundUp(size_t n)
-{
-	if (n % Align)
-        return (n + (Align - n % Align));
-    return n;
-}
-size_t MemPool::FindIndex(size_t n)
-{
-    return RoundUp(n) / Align - 1;
-}
+//size_t MemPool::RoundUp(size_t n)
+//{
+//    if (n % Align)
+//        return (n + (Align - n % Align));
+//    return n;
+//}
+//size_t MemPool::FindIndex(size_t n)
+//{
+//    return RoundUp(n) / Align - 1;
+//}
 void * MemPool::GetBlock(size_t n)
 {
 //    Report();
@@ -92,7 +92,7 @@ void * MemPool::alloc(size_t n)
         else {
 //            std::cout << "Reusing\n";
             result = free_list_use;
-            free_list[FindIndex(n)] = result->next;
+            free_list_use = result->next;
         }
     }
    
