@@ -91,8 +91,8 @@ void * MemPool::alloc(size_t n)
         }
         else {
             
-            std::cout << "Reusing: ";
-            std::cout << reusing_count++ << std::endl;
+//            std::cout << "Reusing: ";
+//            std::cout << reusing_count++ << std::endl;
             result = free_list_use;
             free_list_use = result->next;
         }

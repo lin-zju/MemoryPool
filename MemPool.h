@@ -20,7 +20,7 @@ public:
     };
 //    static const size_t Align = sizeof(Node *);
     static const size_t Align = (1 << 3);
-	static const size_t ByteLimit = (1 << 18);
+	static const size_t ByteLimit = (1 << 16);
 	static const size_t NumFreeList = ByteLimit / Align;
 	// AllocSize must be larger than Align + ByteLimit
     static size_t AllocSize;
