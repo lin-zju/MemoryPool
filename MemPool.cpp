@@ -3,7 +3,7 @@
 // bookkeeping
 int pool_allocation_count;
 int chunk_allocation_count;
-
+int reusing_count;
 //size_t MemPool::AllocSize =  (MemPool::ByteLimit << 2) + sizeof(Node *);
 size_t MemPool::AllocSize =  (1 << 27) + sizeof(Node *);
 
@@ -90,7 +90,9 @@ void * MemPool::alloc(size_t n)
             return GetBlock(n);
         }
         else {
-//            std::cout << "Reusing\n";
+            
+            std::cout << "Reusing: ";
+            std::cout << reusing_count++ << std::endl;
             result = free_list_use;
             free_list_use = result->next;
         }
