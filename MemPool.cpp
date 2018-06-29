@@ -35,12 +35,14 @@ size_t MemPool::RoundUp(size_t n)
 size_t MemPool::FindIndex(size_t n)
 {
     int count = 0;
+    
     int m = Align;
     while (m < n)
     {
         m <<= 1;
         count++;
     }
+//    std::cout << "Size: " << n << " List: " << count << std::endl;
     return count;
 }
 void * MemPool::GetBlock(size_t n)
@@ -84,7 +86,7 @@ void * MemPool::GetBlock(size_t n)
 //        std::cout << "Break if\n";
         AllocSize = AllocSize << 1;
 //        std::cout << "AllocSize: " << AllocSize << std::endl;
-        return reinterpret_cast<Node *>(temp + Align);
+        return reinterpret_cast<void *>(temp + sizeof(Node *));
     }
     
 }
@@ -102,8 +104,9 @@ void * MemPool::alloc(size_t n)
         }
         else {
 //            std::cout << "Reusing Size: " << n << "\n";
+//            std::cout << "Reusing "
             result = free_list_use;
-            free_list[FindIndex(n)] = result->next;
+            free_list_use = result->next;
         }
     }
    

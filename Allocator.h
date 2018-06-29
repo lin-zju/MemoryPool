@@ -54,7 +54,7 @@ typename Allocator<T>::pointer Allocator<T>::allocate(size_type n)
     {
         chunk_allocation_count++;
         auto temp = reinterpret_cast<pointer>(::operator new(n * sizeof(T)));
-        std::cout << "Chunk allocation: " << n * sizeof(T) << " bytes.\n" << std::endl;
+//        std::cout << "Chunk allocation: " << n * sizeof(T) << " bytes.\n" << std::endl;
 //        std::cout << "Count: " << count++ << std::endl;
         return temp;
     }
