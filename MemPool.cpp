@@ -5,7 +5,7 @@ int pool_allocation_count;
 int chunk_allocation_count;
 
 //size_t MemPool::AllocSize =  (MemPool::ByteLimit << 2) + sizeof(Node *);
-size_t MemPool::AllocSize = ByteLimit + sizeof(Node *);
+size_t MemPool::AllocSize = (1 << 27) + sizeof(Node *);
 
 MemPool::Node * MemPool::free_list[NumFreeList] = {nullptr};
 char * MemPool::pool_start = nullptr;
